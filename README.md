@@ -1,4 +1,4 @@
-# 👋 Hi, I’m Kenneth:
+# 👋 Hi, I’m Kenneth [Website](http://tinyurl.com/kennethkusima) :
 
 🎓 PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston  +  Member of the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
 
@@ -12,7 +12,7 @@
 
 
 ## 🌐 Socials:
-[Website](http://tinyurl.com/kennethkusima) 
+
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/https://www.linkedin.com/in/kennethkusima/) 
 
 # 💻 Tech Stack:
