@@ -1,16 +1,16 @@
 # 👋 Hi, I’m Kenneth:
 
-🎓 PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston and member of the Computational Catalysis and Interface Chemistry Group 
+🎓 PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston and member of the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
 
 💻 I develop computational tools for scientific discovery, data-driven modeling, and research workflows
 
-🚀 I build open-source software such as [![HypotheSys™]](https://kkusima.github.io/hypothesys/) and [![Applyly™]](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact
+🚀 I build open-source software such as [HypotheSys™](https://kkusima.github.io/hypothesys/) and [Applyly™](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact
 
 🧠 Passionate about turning complex research and engineering problems into elegant, usable code
 
 
 ## 🌐 Socials:
-[![Website]](http://tinyurl.com/kennethkusima) 
+[Website](http://tinyurl.com/kennethkusima) 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/https://www.linkedin.com/in/kennethkusima/) 
 
 # 💻 Tech Stack:
