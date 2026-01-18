@@ -1,6 +1,12 @@
 # 👋 Hi, I’m Kenneth  :
 
-🎓 Current PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston  +  Member of the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
+🎓 Currently:
+  - PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston
+  - Member of the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
+
+🏫 Previously : 
+  - Visting Applied ML Researcher - Texas A&M University
+  - QC Pharmaceutical Raw Material Scientist - DPT Laboratories
   - Masters in Chemical Engineering - Rice University 
   - Bachelors of Science in Engineering Science (minor in mathematics) - Trinity University
 
