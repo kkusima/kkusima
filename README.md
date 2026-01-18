@@ -1,15 +1,12 @@
 # 👋 Hi, I’m Kenneth  :
 
 🎓 Current PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston  +  Member of the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
-
-🏫 Masters in Chemical Engineering - Rice University 
-
-🏫 Bachelors of Science in Engineering Science (minor in mathematics) - Trinity University
+  - Masters in Chemical Engineering - Rice University 
+  - Bachelors of Science in Engineering Science (minor in mathematics) - Trinity University
 
 💻 I develop computational tools for scientific discovery, data-driven modeling, and research workflows
 
-🚀 I build open-source software such as [![HypotheSys™](https://img.shields.io/badge/HypotheSys™-open--source-blue)](https://kkusima.github.io/hypothesys/)  
-and [![Applyly™](https://img.shields.io/badge/Applyly™-open--source-green)](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact.
+🚀 I build open-source software such as [![HypotheSys™](https://img.shields.io/badge/HypotheSys™-open--source-blue)](https://kkusima.github.io/hypothesys/) and [![Applyly™](https://img.shields.io/badge/Applyly™-open--source-green)](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact.
 
 🧠 Passionate about turning complex research and engineering problems into elegant, usable code
 
