@@ -1,14 +1,17 @@
 # 💫 About Me:
 👋 Hi, I’m Kenneth
 
-🎓 PhD Candidate in Chemical & Biomolecular Engineering with prior training in chemical engineering
+🎓 PhD Candidate in Chemical & Biomolecular Engineering with prior training in chemical engineering 
+
 💻 I develop computational tools for scientific discovery, data-driven modeling, and research workflows
+
 🚀 I build open-source software such as ![HypotheSys™](https://kkusima.github.io/hypothesys/) and ![Applyly™](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact
+
 🧠 Passionate about turning complex research and engineering problems into elegant, usable code
 
 
 ## 🌐 Socials:
-[![Website](https://www.svgrepo.com/show/447845/website-click.svg)](http://tinyurl.com/kennethkusima) 
+[![Website](https://uxwing.com/wp-content/themes/uxwing/download/internet-network-technology/globe-network-icon.png)](http://tinyurl.com/kennethkusima) 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/https://www.linkedin.com/in/kennethkusima/) 
 
 # 💻 Tech Stack:
