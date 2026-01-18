@@ -1,8 +1,10 @@
 # 👋 Hi, I’m Kenneth  :
 
-🎓 PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston  +  Member of the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
+🎓 Current PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston  +  Member of the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
 
-🏫 Master in Chemical Engineering - Rice University + Bachelors of Science in Engineering Science (minor in mathematics) - Trinity University
+🏫 Masters in Chemical Engineering - Rice University 
+
+🏫 Bachelors of Science in Engineering Science (minor in mathematics) - Trinity University
 
 💻 I develop computational tools for scientific discovery, data-driven modeling, and research workflows
 
@@ -13,7 +15,7 @@
 ## 🌐 Website:
 [http://tinyurl.com/kennethkusima](http://tinyurl.com/kennethkusima)
 
-## 🌐 Socials:
+## 📱 Socials:
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/https://www.linkedin.com/in/kennethkusima/) 
 
