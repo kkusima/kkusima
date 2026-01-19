@@ -1,4 +1,4 @@
-# 👋 Hi, I’m Kenneth  :
+# 👋 Hi, I’m Kenneth :
 
 🎓 Currently:
   - PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston
