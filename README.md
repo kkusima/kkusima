@@ -29,6 +29,8 @@
  # 📊 GitHub Stats:
 ![](https://nirzak-streak-stats.vercel.app/?user=kkusima&theme=swift&hide_border=false)<br/>
 ![](https://github-readme-stats.vercel.app/api/top-langs/?username=kkusima&theme=swift&hide_border=false&include_all_commits=true&count_private=true&layout=compact)
+
 ## 📅 2026 Activity
 
-![Days active in 2026](./DAYS_2026.md)
+Days active so far in 2026: <!-- DAYS_2026 --> **0**
+
