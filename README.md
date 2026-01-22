@@ -32,5 +32,5 @@
 
 ## 📅 2026 Activity
 
-Days active so far in 2026: <!-- DAYS_2026 --> **0**
+![](./days-2026.svg)
 
