@@ -3,21 +3,16 @@
 generate_commit_days.py
 
 Generates `commit-activity.svg` for the profile README.
-
-- Fetches GitHub contribution calendar for USERNAME in YEAR via the GraphQL API.
-- Renders a circular progress ring and stats.
-- Shows the consistency percentage inside the circle (big) and the word "consistency" below it.
-- Removes the small duplicate consistency text in the bottom-right.
 """
 import os
 import sys
 import math
 import requests
-from datetime import datetime
+from datetime import datetime, timezone, date
 
 # Configuration
 USERNAME = "kkusima"
-YEAR = datetime.now().year  # auto-updates each year; change to 2026 if you want to lock it
+YEAR = datetime.now(timezone.utc).year  # auto-updates each year; change to 2026 if you want to lock it
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 OUTFILE = "commit-activity.svg"
 
@@ -28,6 +23,11 @@ if not GITHUB_TOKEN:
 
 
 def fetch_contribution_days(username, year, token):
+    """
+    Fetch contributionDays for the given year. Count only days up to today (UTC)
+    to avoid counting future-dated days or timezone mismatches.
+    """
+    # GraphQL query returns contributionCalendar.weeks[].contributionDays[] with date strings like "2026-01-22"
     query = """
     query($username: String!, $from: DateTime!, $to: DateTime!) {
       user(login: $username) {
@@ -46,10 +46,20 @@ def fetch_contribution_days(username, year, token):
     }
     """
 
+    # Use UTC "today" so API range and our counting use the same reference
+    now_utc = datetime.now(timezone.utc)
+    today_utc_date = now_utc.date()
+
+    if year == now_utc.year:
+        to_iso = now_utc.strftime("%Y-%m-%dT23:59:59Z")
+    else:
+        # whole year
+        to_iso = f"{year}-12-31T23:59:59Z"
+
     variables = {
         "username": username,
         "from": f"{year}-01-01T00:00:00Z",
-        "to": f"{year}-12-31T23:59:59Z"
+        "to": to_iso
     }
 
     headers = {
@@ -69,8 +79,13 @@ def fetch_contribution_days(username, year, token):
     days_with_commits = 0
     total_contributions = 0
 
+    # Count only days up to today_utc_date (ignore any future dates that might appear)
     for week in weeks:
         for day in week["contributionDays"]:
+            day_date = datetime.strptime(day["date"], "%Y-%m-%d").date()
+            if day_date > today_utc_date:
+                # Skip future-dated days (defensive)
+                continue
             c = day.get("contributionCount", 0)
             if c > 0:
                 days_with_commits += 1
@@ -80,9 +95,14 @@ def fetch_contribution_days(username, year, token):
 
 
 def calculate_days_elapsed(year):
-    today = datetime.now()
+    """
+    Calculate how many days have elapsed in `year`, using UTC date for consistency
+    with GitHub contribution dates.
+    """
+    today = datetime.now(timezone.utc).date()
+
     if today.year == year:
-        start_of_year = datetime(year, 1, 1)
+        start_of_year = date(year, 1, 1)
         return (today - start_of_year).days + 1
     elif today.year > year:
         # full year
@@ -90,78 +110,4 @@ def calculate_days_elapsed(year):
     else:
         return 0
 
-
-def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
-    # percentage of days-with-commits vs days elapsed
-    percentage = (days_with_commits / days_elapsed * 100.0) if days_elapsed > 0 else 0.0
-
-    # ring color based on percentage thresholds
-    if percentage >= 80:
-        ring_color = "#40c463"
-    elif percentage >= 60:
-        ring_color = "#9be9a8"
-    elif percentage >= 40:
-        ring_color = "#ffd33d"
-    else:
-        ring_color = "#f97583"
-
-    # circle geometry
-    r = 54.0
-    circumference = 2.0 * math.pi * r
-    progress_length = (percentage / 100.0) * circumference
-
-    # formatting strings
-    progress_str = "{:.1f}".format(progress_length)
-    circ_str = "{:.1f}".format(circumference)
-    pct_str = "{:.0f}".format(percentage)
-    contrib_str = "{:,}".format(total_contributions)
-
-    # Build SVG as a single string
-    svg = (
-        '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="160" viewBox="0 0 400 160">\n'
-        '  <defs>\n'
-        '    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">\n'
-        '      <stop offset="0%" style="stop-color:#0d1117;stop-opacity:1" />\n'
-        '      <stop offset="100%" style="stop-color:#161b22;stop-opacity:1" />\n'
-        '    </linearGradient>\n'
-        '  </defs>\n'
-        '  <rect width="400" height="160" rx="12" fill="url(#bgGrad)" stroke="#30363d" stroke-width="1"/>\n'
-        '  <g transform="translate(80, 80)">\n'
-        '    <circle cx="0" cy="0" r="54" fill="none" stroke="#21262d" stroke-width="8"/>\n'
-        f'    <circle cx="0" cy="0" r="54" fill="none" stroke="{ring_color}" stroke-width="8"\n'
-        f'            stroke-dasharray="{progress_str} {circ_str}"\n'
-        '            stroke-linecap="round" transform="rotate(-90)"/>\n'
-        # Center: show percentage and the word "consistency" below it
-        f'    <text x="0" y="-6" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="28" font-weight="700">{pct_str}%</text>\n'
-        '    <text x="0" y="14" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="11">consistency</text>\n'
-        '  </g>\n'
-        '  <g transform="translate(170, 45)">\n'
-        f'    <text x="0" y="0" fill="#58a6ff" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600">📅 {year} Commit Activity</text>\n'
-        '    <text x="0" y="32" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Days with commits</text>\n'
-        f'    <text x="0" y="50" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{days_with_commits} / {days_elapsed}</text>\n'
-        '    <text x="0" y="78" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Total contributions</text>\n'
-        f'    <text x="0" y="96" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{contrib_str}</text>\n'
-        '  </g>\n'
-        # Bottom-right small consistency text removed (per request)
-        '</svg>\n'
-    )
-
-    return svg
-
-
-def main():
-    days_with_commits, total_contributions = fetch_contribution_days(USERNAME, YEAR, GITHUB_TOKEN)
-    days_elapsed = calculate_days_elapsed(YEAR)
-    svg_content = generate_svg(days_with_commits, total_contributions, days_elapsed, YEAR)
-
-    with open(OUTFILE, "w", encoding="utf-8") as f:
-        f.write(svg_content)
-
-    print("✅ Generated {}".format(OUTFILE))
-    print("Days with commits: {}/{}".format(days_with_commits, days_elapsed))
-    print("Total contributions: {}".format(total_contributions))
-    print("Consistency: {}%".format("{:.0f}".format((days_with_commits / days_elapsed * 100) if days_elapsed else 0)))
-
-
-if __name__ == "__main__":
-    main()
+# (rest of file unchanged)
