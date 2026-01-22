@@ -1,0 +1,96 @@
+name: Generate 2026 Activity SVG
+
+on:
+  schedule:
+    # Run daily at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs: 
+  generate-activity:
+    runs-on:  ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version:  '3.11'
+      
+      - name:  Install dependencies
+        run: |
+          pip install svgwrite requests
+      
+      - name: Generate SVG from commit data
+        env:
+          GITHUB_TOKEN: ${{ secrets. GITHUB_TOKEN }}
+        run:  |
+          python3 << 'EOF'
+          import svgwrite
+          import requests
+          import datetime
+          from collections import defaultdict
+          
+          # Fetch user's commits for 2026
+          user = 'kkusima'
+          year = 2026
+          
+          # Get commit data from GitHub API
+          headers = {'Authorization': f'token {os.environ. get("GITHUB_TOKEN")}'}
+          url = f'https://api.github.com/search/commits?q=author:{user}+author-date: >={year}-01-01+author-date: <{year+1}-01-01&sort=author-date&order=asc'
+          
+          response = requests.get(url, headers=headers)
+          commits = response. json().get('items', [])
+          
+          # Count commits per day
+          commit_counts = defaultdict(int)
+          for commit in commits:
+              date = commit['commit']['author']['date']. split('T')[0]
+              commit_counts[date] += 1
+          
+          # Generate SVG
+          dwg = svgwrite.Drawing('days-2026.svg', size=('1000px', '180px'))
+          
+          # Color scheme
+          colors = ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127']
+          
+          # Create calendar grid
+          cell_size = 12
+          spacing = 2
+          start_date = datetime.date(year, 1, 1)
+          
+          for i in range(365):
+              current_date = start_date + datetime.timedelta(days=i)
+              date_str = current_date.strftime('%Y-%m-%d')
+              
+              # Calculate position
+              week = i // 7
+              day = i % 7
+              x = week * (cell_size + spacing)
+              y = day * (cell_size + spacing)
+              
+              # Get intensity (0-4)
+              count = min(commit_counts.get(date_str, 0), 4)
+              color = colors[count]
+              
+              # Add rectangle
+              dwg.add(dwg.rect(insert=(x, y), size=(cell_size, cell_size), fill=color, stroke='#d3d3d3', stroke_width=0.5))
+          
+          dwg.save()
+          print(f"Generated days-2026.svg with {len(commits)} commits")
+          EOF
+      
+      - name:  Commit and push changes
+        run: |
+          git config --local user.email "action@github. com"
+          git config --local user.name "GitHub Action"
+          
+          if git diff --quiet days-2026.svg; then
+            echo "No changes to days-2026.svg"
+          else
+            git add days-2026.svg
+            git commit -m "chore: update 2026 activity calendar [skip ci]"
+            git push
+          fi
