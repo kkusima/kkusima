@@ -31,5 +31,5 @@
 
 ## 📅 2026 Activity
 
-![](./days-2026.svg)
+![](./commit-activity.svg)
 
