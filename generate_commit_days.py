@@ -126,8 +126,8 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
         '    <text x="0" y="78" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Total contributions</text>\n'
         f'    <text x="0" y="96" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{contrib_str}</text>\n'
         '  </g>\n'
-        '  <g transform="translate(320, 130)">\n'
-        f'    <text x="0" y="0" text-anchor="end" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="10">{pct_str}% consistency</text>\n'
+        '  <g transform="translate(320, 138)">\n'
+        f'    <text x="0" y="0" text-anchor="end" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">{pct_str}% consistency</text>\n'
         '  </g>\n'
         '</svg>\n'
     )
