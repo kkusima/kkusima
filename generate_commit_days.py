@@ -7,10 +7,7 @@ Generates `commit-activity.svg` for the profile README.
 - Fetches GitHub contribution calendar for USERNAME in YEAR via the GraphQL API.
 - Renders a circular progress ring and stats.
 - Shows the consistency percentage inside the circle (big) and the word "consistency" below it.
-
-Usage:
-  - In GitHub Actions: set env GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  - Locally: export GITHUB_TOKEN=your_token_here && python generate_commit_days.py
+- Removes the small duplicate consistency text in the bottom-right.
 """
 import os
 import sys
@@ -119,7 +116,7 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
     pct_str = "{:.0f}".format(percentage)
     contrib_str = "{:,}".format(total_contributions)
 
-    # Build SVG as a single string (avoid f-string format spec pitfalls in large templates)
+    # Build SVG as a single string
     svg = (
         '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="160" viewBox="0 0 400 160">\n'
         '  <defs>\n'
@@ -145,10 +142,7 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
         '    <text x="0" y="78" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Total contributions</text>\n'
         f'    <text x="0" y="96" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{contrib_str}</text>\n'
         '  </g>\n'
-        # consistency block moved slightly lower (Option A change already applied)
-        '  <g transform="translate(320, 138)">\n'
-        f'    <text x="0" y="0" text-anchor="end" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="10">{pct_str}% consistency</text>\n'
-        '  </g>\n'
+        # Bottom-right small consistency text removed (per request)
         '</svg>\n'
     )
 
