@@ -1,43 +1,28 @@
-name: Days Active in 2026
+name: 2026 Progress
 
 on:
   schedule:
-    - cron: "0 2 * * *"   # daily at 02:00 UTC
+    - cron: "0 2 * * *"   # runs daily at 02:00 UTC
   workflow_dispatch:
 
 jobs:
   update-readme:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Count active days in 2026
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Calculate days elapsed in 2026
         run: |
-          DAYS=$(gh api graphql -f query='
-            query {
-              user(login: "kkusima") {
-                contributionsCollection(
-                  from: "2026-01-01T00:00:00Z"
-                  to: "2026-12-31T23:59:59Z"
-                ) {
-                  contributionCalendar {
-                    weeks {
-                      contributionDays {
-                        contributionCount
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          ' --jq '
-            .data.user.contributionsCollection.contributionCalendar.weeks
-            | map(.contributionDays[])
-            | map(select(.contributionCount > 0))
-            | length
-          ')
+          START="2026-01-01"
+          TODAY=$(date -u +%Y-%m-%d)
+
+          DAYS=$(( ( $(date -u -d "$TODAY" +%s) - $(date -u -d "$START" +%s) ) / 86400 + 1 ))
+
+          # Safety clamp (before 2026 or after 2026)
+          if [ "$DAYS" -lt 1 ]; then DAYS=0; fi
+          if [ "$DAYS" -gt 366 ]; then DAYS=366; fi
 
           echo "DAYS_2026=$DAYS" >> $GITHUB_ENV
 
@@ -50,5 +35,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add README.md
-          git commit -m "Update days active in 2026" || exit 0
+          git commit -m "Update 2026 progress" || exit 0
           git push
