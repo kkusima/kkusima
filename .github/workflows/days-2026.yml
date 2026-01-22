@@ -2,13 +2,15 @@ name: Days Active in 2026
 
 on:
   schedule:
-    - cron: "0 2 * * *"   # runs daily (02:00 UTC)
+    - cron: "0 2 * * *"   # daily at 02:00 UTC
   workflow_dispatch:
 
 jobs:
-  count-days:
+  update-readme:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - name: Count active days in 2026
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -21,7 +23,6 @@ jobs:
                   to: "2026-12-31T23:59:59Z"
                 ) {
                   contributionCalendar {
-                    totalContributions
                     weeks {
                       contributionDays {
                         contributionCount
@@ -40,14 +41,14 @@ jobs:
 
           echo "DAYS_2026=$DAYS" >> $GITHUB_ENV
 
-      - name: Update badge
+      - name: Update README
         run: |
-          echo "![Days active in 2026](https://img.shields.io/badge/Days%20Active%202026-${DAYS_2026}-brightgreen)" > DAYS_2026.md
+          sed -i "s/<!-- DAYS_2026 -->.*/<!-- DAYS_2026 --> **$DAYS_2026**/" README.md
 
-      - name: Commit update
+      - name: Commit changes
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add DAYS_2026.md
+          git add README.md
           git commit -m "Update days active in 2026" || exit 0
           git push
