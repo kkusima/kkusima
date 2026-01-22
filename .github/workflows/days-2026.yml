@@ -1,0 +1,53 @@
+name: Days Active in 2026
+
+on:
+  schedule:
+    - cron: "0 2 * * *"   # runs daily (02:00 UTC)
+  workflow_dispatch:
+
+jobs:
+  count-days:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Count active days in 2026
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DAYS=$(gh api graphql -f query='
+            query {
+              user(login: "kkusima") {
+                contributionsCollection(
+                  from: "2026-01-01T00:00:00Z"
+                  to: "2026-12-31T23:59:59Z"
+                ) {
+                  contributionCalendar {
+                    totalContributions
+                    weeks {
+                      contributionDays {
+                        contributionCount
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ' --jq '
+            .data.user.contributionsCollection.contributionCalendar.weeks
+            | map(.contributionDays[])
+            | map(select(.contributionCount > 0))
+            | length
+          ')
+
+          echo "DAYS_2026=$DAYS" >> $GITHUB_ENV
+
+      - name: Update badge
+        run: |
+          echo "![Days active in 2026](https://img.shields.io/badge/Days%20Active%202026-${DAYS_2026}-brightgreen)" > DAYS_2026.md
+
+      - name: Commit update
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add DAYS_2026.md
+          git commit -m "Update days active in 2026" || exit 0
+          git push
