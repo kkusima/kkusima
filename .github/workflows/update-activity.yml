@@ -1,41 +1,40 @@
 name: Update 2026 Activity
 
-on:
+on: 
   schedule:
-    # Run daily at midnight UTC
     - cron: '0 0 * * *'
   push:
     branches: 
       - main
-  workflow_dispatch:  # Allow manual trigger
+  workflow_dispatch:
 
 jobs:
   update-activity:
     runs-on: ubuntu-latest
     permissions:
-      contents:  write
+      contents: write
     
     steps:
-      - name: Checkout repository
-        uses:  actions/checkout@v4
+      - name:  Checkout repository
+        uses: actions/checkout@v4
       
       - name: Set up Python
-        uses:  actions/setup-python@v5
-        with: 
-          python-version:  '3.11'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
       
-      - name: Install dependencies
+      - name:  Install dependencies
         run: pip install requests
       
       - name: Generate activity SVG
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
         run: python generate_commit_days.py
       
-      - name:  Commit and push changes
+      - name: Commit and push changes
         run: |
-          git config --local user. email "github-actions[bot]@users. noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add commit-activity. svg
-          git diff --quiet --cached || git commit -m "📊 Update 2026 activity stats"
+          git config --local user.email "github-actions[bot]@users. noreply.github.com"
+          git config --local user. name "github-actions[bot]"
+          git add commit-activity.svg
+          git diff --quiet --cached || git commit -m "Update 2026 activity stats"
           git push
