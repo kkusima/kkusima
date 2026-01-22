@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
 import os
+import sys
 import requests
+import math
 from datetime import datetime
 
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+# Use the current year by default; change to 2026 if you want a fixed-year output
+YEAR = datetime.now().year
 USERNAME = "kkusima"
-YEAR = 2026
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+
+if not GITHUB_TOKEN:
+    print("ERROR: GITHUB_TOKEN environment variable not found. The script needs a token to call the GitHub GraphQL API.")
+    print("If running in GitHub Actions you can set env: GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}")
+    sys.exit(1)
 
 
-def fetch_contribution_days():
+def fetch_contribution_days(username, year, token):
     query = """
     query($username: String!, $from: DateTime!, $to: DateTime!) {
       user(login: $username) {
-        contributionsCollection(from:  $from, to: $to) {
+        contributionsCollection(from: $from, to: $to) {
           contributionCalendar {
             totalContributions
             weeks {
@@ -26,53 +34,56 @@ def fetch_contribution_days():
       }
     }
     """
-    
+
     variables = {
-        "username": USERNAME,
-        "from": str(YEAR) + "-01-01T00:00:00Z",
-        "to": str(YEAR) + "-12-31T23:59:59Z"
+        "username": username,
+        "from": f"{year}-01-01T00:00:00Z",
+        "to": f"{year}-12-31T23:59:59Z"
     }
-    
+
     headers = {
-        "Authorization": "Bearer " + GITHUB_TOKEN,
+        "Authorization": "Bearer " + token,
         "Content-Type": "application/json"
     }
-    
-    response = requests.post(
-        "https://api.github.com/graphql",
-        json={"query": query, "variables": variables},
-        headers=headers
-    )
-    response.raise_for_status()
-    data = response.json()
-    
+
+    resp = requests.post("https://api.github.com/graphql", json={"query": query, "variables": variables}, headers=headers)
+    resp.raise_for_status()
+    payload = resp.json()
+
+    # Basic error handling for GraphQL payload
+    if "errors" in payload:
+        raise RuntimeError("GraphQL errors: {}".format(payload["errors"]))
+
+    weeks = payload["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
+
     days_with_commits = 0
     total_contributions = 0
-    
-    weeks = data["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
+
     for week in weeks:
         for day in week["contributionDays"]:
-            if day["contributionCount"] > 0:
+            c = day.get("contributionCount", 0)
+            if c > 0:
                 days_with_commits += 1
-            total_contributions += day["contributionCount"]
-    
+            total_contributions += c
+
     return days_with_commits, total_contributions
 
 
-def calculate_days_elapsed():
+def calculate_days_elapsed(year):
     today = datetime.now()
-    if today.year == YEAR:
-        start_of_year = datetime(YEAR, 1, 1)
+    if today.year == year:
+        start_of_year = datetime(year, 1, 1)
         return (today - start_of_year).days + 1
-    elif today.year > YEAR:
-        return 366 if (YEAR % 4 == 0 and (YEAR % 100 != 0 or YEAR % 400 == 0)) else 365
+    elif today.year > year:
+        # full year
+        return 366 if (year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)) else 365
     else:
         return 0
 
 
-def generate_svg(days_with_commits, total_contributions, days_elapsed):
-    percentage = (days_with_commits / days_elapsed * 100) if days_elapsed > 0 else 0
-    
+def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
+    percentage = (days_with_commits / days_elapsed * 100) if days_elapsed > 0 else 0.0
+
     if percentage >= 80:
         ring_color = "#40c463"
     elif percentage >= 60:
@@ -81,55 +92,60 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed):
         ring_color = "#ffd33d"
     else:
         ring_color = "#f97583"
-    
-    circumference = 339. 292
-    progress_length = (percentage / 100) * circumference
-    
-    progress_str = "{:. 1f}".format(progress_length)
+
+    r = 54.0
+    circumference = 2.0 * math.pi * r
+    progress_length = (percentage / 100.0) * circumference
+
+    progress_str = "{:.1f}".format(progress_length)
     circ_str = "{:.1f}".format(circumference)
-    pct_str = "{:.0f}". format(percentage)
-    contrib_str = "{: ,}".format(total_contributions)
-    
-    svg = '''<svg xmlns="http://www.w3.org/2000/svg" width="400" height="160" viewBox="0 0 400 160">
-  <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#0d1117;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#161b22;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <rect width="400" height="160" rx="12" fill="url(#bgGrad)" stroke="#30363d" stroke-width="1"/>
-  <g transform="translate(80, 80)">
-    <circle cx="0" cy="0" r="54" fill="none" stroke="#21262d" stroke-width="8"/>
-    <circle cx="0" cy="0" r="54" fill="none" stroke="''' + ring_color + '''" stroke-width="8"
-            stroke-dasharray="''' + progress_str + " " + circ_str + '''"
-            stroke-linecap="round" transform="rotate(-90)"/>
-    <text x="0" y="-8" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="28" font-weight="bold">''' + str(days_with_commits) + '''</text>
-    <text x="0" y="14" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="11">days</text>
-  </g>
-  <g transform="translate(170, 45)">
-    <text x="0" y="0" fill="#58a6ff" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600">2026 Commit Activity</text>
-    <text x="0" y="32" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Days with commits</text>
-    <text x="0" y="50" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">''' + str(days_with_commits) + " / " + str(days_elapsed) + '''</text>
-    <text x="0" y="78" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Total contributions</text>
-    <text x="0" y="96" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">''' + contrib_str + '''</text>
-  </g>
-  <g transform="translate(320, 130)">
-    <text x="0" y="0" text-anchor="end" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="10">''' + pct_str + '''% consistency</text>
-  </g>
-</svg>'''
-    
+    pct_str = "{:.0f}".format(percentage)
+    contrib_str = "{:,}".format(total_contributions)
+
+    svg = (
+        '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="160" viewBox="0 0 400 160">\n'
+        '  <defs>\n'
+        '    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">\n'
+        '      <stop offset="0%" style="stop-color:#0d1117;stop-opacity:1" />\n'
+        '      <stop offset="100%" style="stop-color:#161b22;stop-opacity:1" />\n'
+        '    </linearGradient>\n'
+        '  </defs>\n'
+        '  <rect width="400" height="160" rx="12" fill="url(#bgGrad)" stroke="#30363d" stroke-width="1"/>\n'
+        '  <g transform="translate(80, 80)">\n'
+        '    <circle cx="0" cy="0" r="54" fill="none" stroke="#21262d" stroke-width="8"/>\n'
+        f'    <circle cx="0" cy="0" r="54" fill="none" stroke="{ring_color}" stroke-width="8"\n'
+        f'            stroke-dasharray="{progress_str} {circ_str}"\n'
+        '            stroke-linecap="round" transform="rotate(-90)"/>\n'
+        f'    <text x="0" y="-8" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="28" font-weight="bold">{days_with_commits}</text>\n'
+        '    <text x="0" y="14" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="11">days</text>\n'
+        '  </g>\n'
+        '  <g transform="translate(170, 45)">\n'
+        f'    <text x="0" y="0" fill="#58a6ff" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600">📅 {year} Commit Activity</text>\n'
+        '    <text x="0" y="32" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Days with commits</text>\n'
+        f'    <text x="0" y="50" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{days_with_commits} / {days_elapsed}</text>\n'
+        '    <text x="0" y="78" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Total contributions</text>\n'
+        f'    <text x="0" y="96" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{contrib_str}</text>\n'
+        '  </g>\n'
+        '  <g transform="translate(320, 130)">\n'
+        f'    <text x="0" y="0" text-anchor="end" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="10">{pct_str}% consistency</text>\n'
+        '  </g>\n'
+        '</svg>\n'
+    )
+
     return svg
 
 
 def main():
-    days_with_commits, total_contributions = fetch_contribution_days()
-    days_elapsed = calculate_days_elapsed()
-    svg_content = generate_svg(days_with_commits, total_contributions, days_elapsed)
-    
-    with open("commit-activity.svg", "w") as f:
+    days_with_commits, total_contributions = fetch_contribution_days(USERNAME, YEAR, GITHUB_TOKEN)
+    days_elapsed = calculate_days_elapsed(YEAR)
+    svg_content = generate_svg(days_with_commits, total_contributions, days_elapsed, YEAR)
+
+    with open("commit-activity.svg", "w", encoding="utf-8") as f:
         f.write(svg_content)
-    
-    print("Generated commit-activity.svg")
+
+    print("✅ Generated commit-activity.svg")
+    print("Days with commits: {}/{}".format(days_with_commits, days_elapsed))
+    print("Total contributions: {}".format(total_contributions))
 
 
 if __name__ == "__main__":
