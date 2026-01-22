@@ -29,10 +29,13 @@
  # 📊 GitHub Stats:
 ![](https://nirzak-streak-stats.vercel.app/?user=kkusima&theme=swift&hide_border=false)<br/>
 ![](https://github-readme-stats.vercel.app/api/top-langs/?username=kkusima&theme=swift&hide_border=false&include_all_commits=true&count_private=true&layout=compact)
+
 ![](https://github-readme-stats.vercel.app/api?username=kkusima&show_icons=true&theme=swift&hide_border=false&include_all_commits=true&count_private=true&cache_seconds=1800)
+
 ![](https://github-readme-stats.vercel.app/api/top-langs/?username=kkusima&theme=swift&hide_border=false&layout=compact&cache_seconds=1800)
+
 ![](https://streak-stats.demolab.com?user=kkusima&theme=swift&hide_border=false&date_format=j%20M%5B%20Y%5D)
-<sub>Stats update periodically and are based on GitHub’s UTC activity window.</sub>
+
 
 
 
