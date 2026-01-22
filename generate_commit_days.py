@@ -1,14 +1,28 @@
 #!/usr/bin/env python3
+"""
+generate_commit_days.py
+
+Generates `commit-activity.svg` for the profile README.
+
+- Fetches GitHub contribution calendar for USERNAME in YEAR via the GraphQL API.
+- Renders a circular progress ring and stats.
+- Shows the consistency percentage inside the circle (big) and the word "consistency" below it.
+
+Usage:
+  - In GitHub Actions: set env GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  - Locally: export GITHUB_TOKEN=your_token_here && python generate_commit_days.py
+"""
 import os
 import sys
-import requests
 import math
+import requests
 from datetime import datetime
 
-# Use the current year by default; change to 2026 if you want a fixed-year output
-YEAR = datetime.now().year
+# Configuration
 USERNAME = "kkusima"
+YEAR = datetime.now().year  # auto-updates each year; change to 2026 if you want to lock it
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+OUTFILE = "commit-activity.svg"
 
 if not GITHUB_TOKEN:
     print("ERROR: GITHUB_TOKEN environment variable not found. The script needs a token to call the GitHub GraphQL API.")
@@ -22,13 +36,13 @@ def fetch_contribution_days(username, year, token):
       user(login: $username) {
         contributionsCollection(from: $from, to: $to) {
           contributionCalendar {
-            totalContributions
             weeks {
               contributionDays {
                 contributionCount
                 date
               }
             }
+            totalContributions
           }
         }
       }
@@ -50,7 +64,6 @@ def fetch_contribution_days(username, year, token):
     resp.raise_for_status()
     payload = resp.json()
 
-    # Basic error handling for GraphQL payload
     if "errors" in payload:
         raise RuntimeError("GraphQL errors: {}".format(payload["errors"]))
 
@@ -82,8 +95,10 @@ def calculate_days_elapsed(year):
 
 
 def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
-    percentage = (days_with_commits / days_elapsed * 100) if days_elapsed > 0 else 0.0
+    # percentage of days-with-commits vs days elapsed
+    percentage = (days_with_commits / days_elapsed * 100.0) if days_elapsed > 0 else 0.0
 
+    # ring color based on percentage thresholds
     if percentage >= 80:
         ring_color = "#40c463"
     elif percentage >= 60:
@@ -93,15 +108,18 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
     else:
         ring_color = "#f97583"
 
+    # circle geometry
     r = 54.0
     circumference = 2.0 * math.pi * r
     progress_length = (percentage / 100.0) * circumference
 
+    # formatting strings
     progress_str = "{:.1f}".format(progress_length)
     circ_str = "{:.1f}".format(circumference)
     pct_str = "{:.0f}".format(percentage)
     contrib_str = "{:,}".format(total_contributions)
 
+    # Build SVG as a single string (avoid f-string format spec pitfalls in large templates)
     svg = (
         '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="160" viewBox="0 0 400 160">\n'
         '  <defs>\n'
@@ -116,8 +134,9 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
         f'    <circle cx="0" cy="0" r="54" fill="none" stroke="{ring_color}" stroke-width="8"\n'
         f'            stroke-dasharray="{progress_str} {circ_str}"\n'
         '            stroke-linecap="round" transform="rotate(-90)"/>\n'
-        f'    <text x="0" y="-8" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="28" font-weight="bold">{days_with_commits}</text>\n'
-        '    <text x="0" y="14" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="11">days</text>\n'
+        # Center: show percentage and the word "consistency" below it
+        f'    <text x="0" y="-6" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="28" font-weight="700">{pct_str}%</text>\n'
+        '    <text x="0" y="14" text-anchor="middle" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="11">consistency</text>\n'
         '  </g>\n'
         '  <g transform="translate(170, 45)">\n'
         f'    <text x="0" y="0" fill="#58a6ff" font-family="Segoe UI, sans-serif" font-size="14" font-weight="600">📅 {year} Commit Activity</text>\n'
@@ -126,8 +145,9 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
         '    <text x="0" y="78" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Total contributions</text>\n'
         f'    <text x="0" y="96" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{contrib_str}</text>\n'
         '  </g>\n'
+        # consistency block moved slightly lower (Option A change already applied)
         '  <g transform="translate(320, 138)">\n'
-        f'    <text x="0" y="0" text-anchor="end" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">{pct_str}% consistency</text>\n'
+        f'    <text x="0" y="0" text-anchor="end" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="10">{pct_str}% consistency</text>\n'
         '  </g>\n'
         '</svg>\n'
     )
@@ -140,12 +160,13 @@ def main():
     days_elapsed = calculate_days_elapsed(YEAR)
     svg_content = generate_svg(days_with_commits, total_contributions, days_elapsed, YEAR)
 
-    with open("commit-activity.svg", "w", encoding="utf-8") as f:
+    with open(OUTFILE, "w", encoding="utf-8") as f:
         f.write(svg_content)
 
-    print("✅ Generated commit-activity.svg")
+    print("✅ Generated {}".format(OUTFILE))
     print("Days with commits: {}/{}".format(days_with_commits, days_elapsed))
     print("Total contributions: {}".format(total_contributions))
+    print("Consistency: {}%".format("{:.0f}".format((days_with_commits / days_elapsed * 100) if days_elapsed else 0)))
 
 
 if __name__ == "__main__":
