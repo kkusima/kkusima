@@ -6,7 +6,7 @@
 
 🏫 Previously : 
   - Visting Applied ML Researcher - Texas A&M University
-  - QC Pharmaceutical Raw Material Scientist - DPT Laboratories, San Antonio, TX
+  - QC Scientist : Pharmaceutical Raw Materials  - DPT Laboratories, San Antonio, TX
   - Masters in Chemical Engineering - Rice University 
   - Bachelors of Science in Engineering Science (minor in mathematics) - Trinity University
 
