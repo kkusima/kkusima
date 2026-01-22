@@ -115,7 +115,7 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed):
     <circle cx="0" cy="0" r="54" fill="none" stroke="#21262d" stroke-width="8"/>
     <!-- Progress ring -->
     <circle cx="0" cy="0" r="54" fill="none" stroke="{ring_color}" stroke-width="8"
-            stroke-dasharray="{progress_length:. 1f} {circumference:.1f}"
+            stroke-dasharray="{progress_length:.1f} {circumference:.1f}"
             stroke-linecap="round" transform="rotate(-90)"/>
     <!-- Center text -->
     <text x="0" y="-8" text-anchor="middle" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="28" font-weight="bold">{days_with_commits}</text>
@@ -130,7 +130,7 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed):
     <text x="0" y="50" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{days_with_commits} / {days_elapsed}</text>
     
     <text x="0" y="78" fill="#8b949e" font-family="Segoe UI, sans-serif" font-size="12">Total contributions</text>
-    <text x="0" y="96" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{total_contributions: ,}</text>
+    <text x="0" y="96" fill="#ffffff" font-family="Segoe UI, sans-serif" font-size="16" font-weight="500">{total_contributions:,}</text>
   </g>
   
   <!-- Consistency badge -->
