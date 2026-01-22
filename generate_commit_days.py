@@ -148,10 +148,10 @@ def main():
     
     svg_content = generate_svg(days_with_commits, total_contributions, days_elapsed)
     
-    with open("days-2026.svg", "w") as f:
+    with open("commit-activity.svg", "w") as f:
         f.write(svg_content)
     
-    print(f"✅ Generated days-2026.svg")
+    print(f"✅ Generated commit-activity.svg")
     print(f"   Days with commits: {days_with_commits}/{days_elapsed}")
     print(f"   Total contributions: {total_contributions}")
 
