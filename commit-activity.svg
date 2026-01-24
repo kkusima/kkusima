@@ -37,19 +37,19 @@
 
   <!-- Statistics Section -->
   <g transform="translate(200, 45)">
-    <text x="0" y="0" fill="#58a6ff" font-family="Segoe UI, -apple-system, sans-serif" font-size="16" font-weight="700">📅 2026 Commit Activity</text>
+    <text x="0" y="0" fill="#58a6ff" font-family="Segoe UI, -apple-system, sans-serif" font-size="16" font-weight="700">📅 2026 Activity Streak</text>
     
     <g transform="translate(0, 35)">
-      <text x="0" y="0" fill="#8b949e" font-family="Segoe UI, -apple-system, sans-serif" font-size="13">Active Days</text>
+      <text x="0" y="0" fill="#8b949e" font-family="Segoe UI, -apple-system, sans-serif" font-size="13">Active Days (Visual)</text>
       <text x="0" y="22" fill="#ffffff" font-family="Segoe UI, -apple-system, sans-serif" font-size="18" font-weight="600">24 / 24</text>
     </g>
     
     <g transform="translate(0, 80)">
       <text x="0" y="0" fill="#8b949e" font-family="Segoe UI, -apple-system, sans-serif" font-size="13">Total Contributions</text>
-      <text x="0" y="22" fill="#ffffff" font-family="Segoe UI, -apple-system, sans-serif" font-size="18" font-weight="600">364</text>
+      <text x="0" y="22" fill="#ffffff" font-family="Segoe UI, -apple-system, sans-serif" font-size="18" font-weight="600">365</text>
     </g>
   </g>
   
   <!-- Footer -->
-  <text x="430" y="165" text-anchor="end" fill="#484f58" font-family="Segoe UI, -apple-system, sans-serif" font-size="10" font-style="italic">Last updated: Jan 24, 2026 08:50 UTC</text>
+  <text x="430" y="165" text-anchor="end" fill="#484f58" font-family="Segoe UI, -apple-system, sans-serif" font-size="10" font-style="italic">Last updated: Jan 24, 2026 09:06 UTC</text>
 </svg>
