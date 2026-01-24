@@ -4,6 +4,7 @@ generate_commit_days.py
 
 Generates a premium `commit-activity.svg` for the profile README.
 Uses GitHub GraphQL API to fetch contribution data for the current year.
+Strictly follows the visual representation of the contribution graph.
 """
 import os
 import sys
@@ -18,8 +19,8 @@ OUTFILE = "commit-activity.svg"
 
 def fetch_contribution_days(username, year, token):
     """
-    Fetch contributionDays for the given year. Count only days up to today (UTC)
-    to avoid counting future-dated days or timezone mismatches.
+    Fetch contributionDays for the given year. 
+    Strictly follows the visual contribution graph by checking 'contributionLevel'.
     """
     query = """
     query($username: String!, $from: DateTime!, $to: DateTime!) {
@@ -30,6 +31,7 @@ def fetch_contribution_days(username, year, token):
             weeks {
               contributionDays {
                 contributionCount
+                contributionLevel
                 date
               }
             }
@@ -39,7 +41,6 @@ def fetch_contribution_days(username, year, token):
     }
     """
 
-    # We want the whole year range for the API, but we'll count carefully
     variables = {
         "username": username,
         "from": f"{year}-01-01T00:00:00Z",
@@ -61,22 +62,23 @@ def fetch_contribution_days(username, year, token):
     weeks = payload["data"]["user"]["contributionsCollection"]["contributionCalendar"]["weeks"]
     
     today_utc = datetime.now(timezone.utc).date()
-    days_with_commits = 0
+    days_with_activity = 0
     total_contributions = 0
 
     for week in weeks:
         for day in week["contributionDays"]:
             day_date = datetime.strptime(day["date"], "%Y-%m-%d").date()
-            # GitHub API can return data for the whole week even if some days are in the future
             if day_date > today_utc:
                 continue
                 
-            count = day.get("contributionCount", 0)
-            if count > 0:
-                days_with_commits += 1
-            total_contributions += count
+            # Contribution level 'NONE' means an empty (grey) square on the graph
+            level = day.get("contributionLevel", "NONE")
+            if level != "NONE":
+                days_with_activity += 1
+            
+            total_contributions += day.get("contributionCount", 0)
 
-    return days_with_commits, total_contributions
+    return days_with_activity, total_contributions
 
 def calculate_days_elapsed(year):
     """
@@ -92,11 +94,11 @@ def calculate_days_elapsed(year):
     else:
         return 0
 
-def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
+def generate_svg(days_with_activity, total_contributions, days_elapsed, year):
     """
     Generate a premium, modern SVG with a progress ring and stats.
     """
-    consistency = (days_with_commits / days_elapsed * 100) if days_elapsed > 0 else 0
+    consistency = (days_with_activity / days_elapsed * 100) if days_elapsed > 0 else 0
     
     # Elegant color palette
     if consistency >= 85:
@@ -152,11 +154,11 @@ def generate_svg(days_with_commits, total_contributions, days_elapsed, year):
 
   <!-- Statistics Section -->
   <g transform="translate(200, 45)">
-    <text x="0" y="0" fill="#58a6ff" font-family="Segoe UI, -apple-system, sans-serif" font-size="16" font-weight="700">📅 {year} Commit Activity</text>
+    <text x="0" y="0" fill="#58a6ff" font-family="Segoe UI, -apple-system, sans-serif" font-size="16" font-weight="700">📅 {year} Activity Streak</text>
     
     <g transform="translate(0, 35)">
-      <text x="0" y="0" fill="#8b949e" font-family="Segoe UI, -apple-system, sans-serif" font-size="13">Active Days</text>
-      <text x="0" y="22" fill="#ffffff" font-family="Segoe UI, -apple-system, sans-serif" font-size="18" font-weight="600">{days_with_commits} / {days_elapsed}</text>
+      <text x="0" y="0" fill="#8b949e" font-family="Segoe UI, -apple-system, sans-serif" font-size="13">Active Days (Visual)</text>
+      <text x="0" y="22" fill="#ffffff" font-family="Segoe UI, -apple-system, sans-serif" font-size="18" font-weight="600">{days_with_activity} / {days_elapsed}</text>
     </g>
     
     <g transform="translate(0, 80)">
@@ -176,18 +178,18 @@ def main():
         sys.exit(1)
 
     try:
-        print(f"🚀 Fetching data for {USERNAME} in {YEAR}...")
-        days_with_commits, total_contributions = fetch_contribution_days(USERNAME, YEAR, GITHUB_TOKEN)
+        print(f"🚀 Fetching activity for {USERNAME} in {YEAR}...")
+        days_with_activity, total_contributions = fetch_contribution_days(USERNAME, YEAR, GITHUB_TOKEN)
         days_elapsed = calculate_days_elapsed(YEAR)
         
-        print(f"📊 Stats: {days_with_commits} days, {total_contributions} commits, {days_elapsed} days elapsed.")
+        print(f"📊 Stats: {days_with_activity} active days, {total_contributions} contributions, {days_elapsed} days elapsed.")
         
-        svg_content = generate_svg(days_with_commits, total_contributions, days_elapsed, YEAR)
+        svg_content = generate_svg(days_with_activity, total_contributions, days_elapsed, YEAR)
         
         with open(OUTFILE, "w") as f:
             f.write(svg_content)
         
-        print(f"✅ Successfully generated {OUTFILE}")
+        print(f"✅ Successfully generated {OUTFILE} (matched to visual graph)")
         
     except Exception as e:
         print(f"❌ Error: {e}")
