@@ -65,18 +65,32 @@ def fetch_contribution_days(username, year, token):
     days_with_activity = 0
     total_contributions = 0
 
+    print(f"\n🔍 Detailed Activity for Jan {year}:")
     for week in weeks:
         for day in week["contributionDays"]:
             day_date = datetime.strptime(day["date"], "%Y-%m-%d").date()
+            if day_date.year != year or day_date.month != 1:
+                if day_date > today_utc: continue
+                # Still count for totals, just don't print
+                level = day.get("contributionLevel", "NONE")
+                if level != "NONE": days_with_activity += 1
+                total_contributions += day.get("contributionCount", 0)
+                continue
+
             if day_date > today_utc:
                 continue
                 
-            # Contribution level 'NONE' means an empty (grey) square on the graph
             level = day.get("contributionLevel", "NONE")
+            count = day.get("contributionCount", 0)
+            
+            # DEBUG: Print every day in January
+            print(f"   {day_date}: Level={level}, Count={count}")
+
             if level != "NONE":
                 days_with_activity += 1
             
-            total_contributions += day.get("contributionCount", 0)
+            total_contributions += count
+    print("")
 
     return days_with_activity, total_contributions
 
