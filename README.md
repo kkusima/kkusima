@@ -4,7 +4,7 @@
   - Incoming ML Engineer at Sunthetics
 
 🏫 Previously : 
-  - PhD in (Computational) Chemical Engineering - Univesity of Houston
+  - PhD in (Computational) Chemical Engineering - University of Houston
   - Researcher in the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
   - Visting Applied ML Researcher - Texas A&M University
   - QC Scientist : Pharmaceutical Raw Materials  - DPT Laboratories, San Antonio, TX
