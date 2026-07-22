@@ -1,10 +1,11 @@
 # 👋 Hi, I’m Kenneth :
 
-🎓 Currently:
-  - PhD Candidate in Chemical & Biomolecular Engineering at the Univesity of Houston
-  - Member of the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
+💻 Currently:
+  - Incoming ML Engineer at Sunthetics
 
 🏫 Previously : 
+  - PhD in Chemical Engineering - Univesity of Houston
+  - Researcher in the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
   - Visting Applied ML Researcher - Texas A&M University
   - QC Scientist : Pharmaceutical Raw Materials  - DPT Laboratories, San Antonio, TX
   - Masters in Chemical Engineering - Rice University 
@@ -12,7 +13,7 @@
 
 💻 I develop computational tools for scientific discovery, data-driven modeling, and research workflows
 
-🚀 I build open-source software such as [![HypotheSys™](https://img.shields.io/badge/HypotheSys™-open--source-blue)](https://kkusima.github.io/hypothesys/) and [![Applyly™](https://img.shields.io/badge/Applyly™-open--source-green)](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact.
+🚀 I build open-source software such as [![Traxome™](https://img.shields.io/badge/Traxome™-open--source-yellow)](https://github.com/kkusima/Traxome), [![HypotheSys™](https://img.shields.io/badge/HypotheSys™-open--source-blue)](https://kkusima.github.io/hypothesys/) and [![Applyly™](https://img.shields.io/badge/Applyly™-open--source-green)](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact.
 
 🧠 Passionate about turning complex research and engineering problems into elegant, usable code
 
