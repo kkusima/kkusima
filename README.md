@@ -13,7 +13,7 @@
 
 💻 I develop computational tools for scientific discovery, data-driven modeling, and research workflows
 
-🚀 I build open-source software such as [![PyMixEF](https://img.shields.io/badge/Traxome™-open--source-purple)](https://github.com/kkusima/PyMixEF), [![Traxome™](https://img.shields.io/badge/Traxome™-open--source-yellow)](https://github.com/kkusima/Traxome), [![HypotheSys™](https://img.shields.io/badge/HypotheSys™-open--source-blue)](https://kkusima.github.io/hypothesys/) and [![Applyly™](https://img.shields.io/badge/Applyly™-open--source-green)](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact.
+🚀 I build open-source software such as [![PyMixEF](https://img.shields.io/badge/PyMixEF-open--source-purple)](https://github.com/kkusima/PyMixEF), [![Traxome™](https://img.shields.io/badge/Traxome™-open--source-yellow)](https://github.com/kkusima/Traxome), [![HypotheSys™](https://img.shields.io/badge/HypotheSys™-open--source-blue)](https://kkusima.github.io/hypothesys/) and [![Applyly™](https://img.shields.io/badge/Applyly™-open--source-green)](https://kkusima.github.io/applyly/), focused on rapid prototyping and practical impact.
 
 🧠 Passionate about turning complex research and engineering problems into elegant, usable code
 
