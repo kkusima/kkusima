@@ -2,7 +2,7 @@
 
 💻 Currently:
   - ML Engineer at <a href="https://www.sunthetics.io/" target="_blank" rel="noopener noreferrer">Sunthetics</a>
-  - Volunteer Project Manager at <a href="https://www.houstonshapers.org/" target="_blank" rel="noopener noreferrer"> the WEF Global Shapers Houston Hub</a> - for the <a href="https://houaid.vercel.app/" target="_blank" rel="noopener noreferrer">HouAid Project</a>
+  - Volunteer Project Manager at the <a href="https://www.houstonshapers.org/" target="_blank" rel="noopener noreferrer"> WEF Global Shapers Houston Hub</a> - for the <a href="https://houaid.vercel.app/" target="_blank" rel="noopener noreferrer">HouAid Project</a>
     
 🏫 Previously : 
   - PhD in Chemical Engineering - University of Houston
