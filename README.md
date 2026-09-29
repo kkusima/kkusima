@@ -1,7 +1,7 @@
 # 👋 Hi, I’m Kenneth :
 
 💻 Currently:
-  - ML Engineer at Sunthetics
+  - ML Engineer at [Sunthetics](https://www.sunthetics.io/) 
   - Volunteer Project Manager at [WEF Global Shapers Houston Hub](https://www.houstonshapers.org/) - for the [HouAid Project](https://houaid.vercel.app/)
     
 🏫 Previously : 
