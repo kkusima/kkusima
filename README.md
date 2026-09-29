@@ -1,12 +1,12 @@
 # 👋 Hi, I’m Kenneth :
 
 💻 Currently:
-  - ML Engineer at [Sunthetics](https://www.sunthetics.io/) 
-  - Volunteer Project Manager at [WEF Global Shapers Houston Hub](https://www.houstonshapers.org/) - for the [HouAid Project](https://houaid.vercel.app/)
+  - ML Engineer at <a href="https://www.sunthetics.io/" target="_blank" rel="noopener noreferrer">Sunthetics</a>
+  - Volunteer Project Manager at <a href="https://www.houstonshapers.org/" target="_blank" rel="noopener noreferrer"> the WEF Global Shapers Houston Hub</a> - for the <a href="https://houaid.vercel.app/" target="_blank" rel="noopener noreferrer">HouAid Project</a>
     
 🏫 Previously : 
   - PhD in Chemical Engineering - University of Houston
-  - Researcher in the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
+  - Researcher in the <a href="https://grabow.chee.uh.edu/?page_id=53" target="_blank" rel="noopener noreferrer">Computational Catalysis and Interface Chemistry Group</a>
   - Visting Applied ML Researcher - Texas A&M University
   - QC Scientist : Pharmaceutical Raw Materials  - DPT Laboratories, San Antonio, TX
   - Masters in Chemical Engineering - Rice University 
