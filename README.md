@@ -2,7 +2,8 @@
 
 💻 Currently:
   - ML Engineer at Sunthetics
-
+  - Volunteer Project Manager at [WEF Global Shapers Houston Hub](https://www.houstonshapers.org/) - for the [HouAid Project](https://houaid.vercel.app/)
+    
 🏫 Previously : 
   - PhD in Chemical Engineering - University of Houston
   - Researcher in the [Computational Catalysis and Interface Chemistry Group](https://grabow.chee.uh.edu/?page_id=53) 
